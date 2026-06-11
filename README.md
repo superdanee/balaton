@@ -1,0 +1,1 @@
+Balatoni horgászrend napi lebontásban
