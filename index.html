@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balatoni Horgászrend Kalkulátor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --apple-black: #1d1d1f;
+            --apple-grey-text: #86868b;
+            --apple-bg: #f5f5f7;
+            --apple-blue: #0071e3;
+            --apple-red: #ff3b30;
+            --apple-green: #34c759;
+            --apple-card-bg: #ffffff;
+            --apple-border: #d2d2d7;
+        }
+
+        body {
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--apple-bg);
+            color: var(--apple-black);
+            margin: 0;
+            padding: 50px 20px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 44px;
+            font-weight: 700;
+            letter-spacing: -0.005em;
+            margin-bottom: 10px;
+            color: var(--apple-black);
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: var(--apple-grey-text);
+            font-weight: 400;
+            letter-spacing: 0.01em;
+            margin-top: 0;
+        }
+
+        .date-picker-box {
+            background: var(--apple-card-bg);
+            border-radius: 20px;
+            padding: 35px;
+            text-align: center;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            margin-bottom: 40px;
+        }
+
+        label {
+            font-size: 17px;
+            font-weight: 500;
+            color: var(--apple-black);
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        input[type="date"] {
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--apple-black);
+            padding: 14px 24px;
+            border: 1px solid var(--apple-border);
+            border-radius: 14px;
+            background-color: var(--apple-bg);
+            outline: none;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        input[type="date"]:focus {
+            border-color: var(--apple-blue);
+            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
+            background-color: #ffffff;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-layout {
+                grid-template-columns: 1fr;
+            }
+            h1 { font-size: 34px; }
+        }
+
+        .section-card {
+            background: var(--apple-card-bg);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.02);
+        }
+
+        .section-card h2 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 20px;
+            letter-spacing: -0.01em;
+        }
+
+        .section-card.warning-style {
+            border-top: 4px solid var(--apple-blue);
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 22px;
+            color: var(--apple-black);
+        }
+
+        li {
+            margin-bottom: 14px;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        li strong {
+            font-weight: 600;
+        }
+
+        .table-container {
+            background: var(--apple-card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            overflow-x: auto;
+        }
+
+        .table-container h2 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--apple-grey-text);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--apple-border);
+        }
+
+        td {
+            padding: 20px 18px;
+            font-size: 15px;
+            border-bottom: 1px solid #f2f2f7;
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: rgba(245, 245, 247, 0.6);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .badge.banned {
+            background-color: rgba(255, 59, 48, 0.1);
+            color: var(--apple-red);
+        }
+
+        .badge.allowed {
+            background-color: rgba(52, 199, 89, 0.1);
+            color: var(--apple-green);
+        }
+
+        .date-info {
+            display: block;
+            font-size: 11px;
+            font-weight: 400;
+            margin-top: 3px;
+            opacity: 0.8;
+        }
+
+        .muted-text {
+            color: var(--apple-grey-text);
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Balatoni Horgászrend</h1>
+            <p class="subtitle">Intelligens napi szabály- és korlátozáskereső</p>
+        </header>
+        
+        <div class="date-picker-box">
+            <label for="date-input">Válaszd ki a napot, amikor horgászol:</label>
+            <input type="date" id="date-input">
+        </div>
+
+        <div id="results" style="display:none;">
+            <div class="grid-layout">
+                <div class="section-card">
+                    <h2>1. Csónakos horgászat szabályai</h2>
+                    <div id="boat-rules"></div>
+                </div>
+
+                <div class="section-card warning-style">
+                    <h2>2. Általános módszertani korlátozások</h2>
+                    <div id="general-rules"></div>
+                </div>
+            </div>
+
+            <div class="section-card" style="margin-bottom: 40px;">
+                <h2>3. Éves darabszám korlátozások <span style="font-weight:300; color:var(--apple-grey-text); font-size:16px;">(Felnőtt jegy esetén)</span></h2>
+                <ul>
+                    <li><strong>Éves globális kvóta:</strong> Legfeljebb 100 darab darabszám-korlátozással védett hal tartható meg összesen.</li>
+                    <li><strong>Ragadozó korlát:</strong> A 100 darabból maximum 60 darab lehet ragadozó hal.</li>
+                    <li><strong>Nagytestű süllő korlát:</strong> Az 5 kg-ot elérő vagy meghaladó fogassüllőből évente maximum 10 darab tartható meg.</li>
+                    <li><strong>Napi egyéb kvóta:</strong> Darabszám-korlátozással nem védett őshonos halakból naponta legfeljebb 10 kg fogható.</li>
+                </ul>
+            </div>
+
+            <div class="table-container">
+                <h2>4. Halak megtartása és méretkorlátozások</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Halfaj</th>
+                            <th>Státusz ezen a napon</th>
+                            <th>Kifogható méret</th>
+                            <th>Napi limit</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fish-table-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fishData = [
+            { name: "Csuka", start: "02-02", end: "04-30", min: "legalább 45 cm", limit: "3 db (75 cm felett naponta 1 db)" },
+            { name: "Balin", start: "02-16", end: "04-30", min: "legalább 45 cm", limit: "1 db" },
+            { name: "Sügér", start: "02-16", end: "04-30", min: "legalább 15 cm", limit: "2 kg (éves kvótába nem számít)" },
+            { name: "Fogassüllő", start: "02-16", end: "04-30", min: "legalább 35 cm", limit: "3 db (70 cm felett naponta 1 db)" },
+            { name: "Kősüllő", start: "02-16", end: "06-30", min: "legalább 25 cm", limit: "3 db" },
+            { name: "Garda", start: "04-15", end: "05-29", min: "legalább 20 cm", limit: "3 kg" },
+            { name: "Domolykó", start: "04-15", end: "05-29", min: "legalább 25 cm", limit: "3 kg" },
+            { name: "Jászkeszeg", start: "04-15", end: "05-29", min: "legalább 20 cm", limit: "3 kg" },
+            { name: "Szilvaorrú keszeg", start: "04-15", end: "05-29", min: "legalább 20 cm", limit: "3 kg" },
+            { name: "Paduc", start: "04-15", end: "05-29", min: "legalább 20 cm", limit: "3 kg" },
+            { name: "Márna", start: "04-15", end: "05-29", min: "legalább 40 cm", limit: "3 db" },
+            { name: "Ponty", start: "05-04", end: "05-29", min: "legalább 35 cm", limit: "3 db (70 cm felett kötelező visszaengedni!)" },
+            { name: "Compó", start: "05-04", end: "06-15", min: "legalább 25 cm", limit: "3 db" },
+            { name: "Harcsa", start: "05-04", end: "06-15", min: "legalább 60 cm", limit: "3 db (max 15 kg/nap)" },
+            { name: "Sebes pisztráng", start: "10-01", end: "03-31", min: "legalább 22 cm", limit: "3 db" },
+            { name: "Menyhal", start: "01-01", end: "12-31", min: "-", limit: "EGÉSZ ÉVBEN TILOS MEGTARTANI" }
+        ];
+
+        function isInPeriod(d, startStr, endStr) {
+            let currentYear = d.getFullYear();
+            let start = new Date(currentYear + "-" + startStr);
+            let end = new Date(currentYear + "-" + endStr);
+            
+            start.setHours(0,0,0,0);
+            end.setHours(23,59,59,999);
+            
+            let target = new Date(d);
+            target.setHours(12,0,0,0);
+
+            if (start <= end) {
+                return target >= start && target <= end;
+            } else {
+                return target >= start || target <= end;
+            }
+        }
+
+        function updateRulesForDate(selectedDate) {
+            if(isNaN(selectedDate)) return;
+
+            document.getElementById('results').style.display = 'block';
+
+            // 1. Csónakos szabályok
+            let boatRulesHtml = "<ul>";
+            if (isInPeriod(selectedDate, "04-01", "05-15")) {
+                boatRulesHtml += "<li><strong>Tavaszi csónakos korlátozás érvényes!</strong> Vízijárműről csak nappal, <strong>06:00 és 20:00 között</strong> szabad horgászni.</li>";
+                boatRulesHtml += "<li>Csak partközeli sávban horgászhat: az északi parton max 50m, a déli parton max 300m sávban.</li>";
+                boatRulesHtml += "<li>A nyílt vízen (a sávokon kívül) közlekedő vízijárműben horgászeszközt tartani szigorúan tilos!</li>";
+            } 
+            else if (isInPeriod(selectedDate, "11-01", "03-31")) {
+                boatRulesHtml += "<li><strong>Téli csónakos korlátozás érvényes!</strong> Vízijárműről csak nappal, <strong>06:00 és 22:00 között</strong> szabad horgászni.</li>";
+                boatRulesHtml += "<li>Éjszakai csónakos horgászat szigorúan TILOS ezen a napon. A partról történő horgászatot ez nem érinti.</li>";
+            }
+            else {
+                boatRulesHtml += "<li>Ezen a napon nincsenek különleges időszakos csónakos tilalmak, az általános horgászrendi szabályok érvényesek. Éjszaka is szabad vízijárműről horgászni.</li>";
+            }
+            boatRulesHtml += "</ul>";
+            document.getElementById('boat-rules').innerHTML = boatRulesHtml;
+
+            // 2. Általános szabályok
+            let generalRulesHtml = "<ul>";
+            if (isInPeriod(selectedDate, "02-15", "04-30")) {
+                generalRulesHtml += "<li><strong>Tavaszi ragadozós tilalom:</strong> Csalihalat, halszeletet, műcsalit BÁRMELY horgászhelyen (parton, csónakban stb.) tartani vagy azzal horgászni <strong>TILOS!</strong></li>";
+                generalRulesHtml += "<li>Süllőt, balint, csukát, kősüllőt és sügért megtartani tilos!</li>";
+                generalRulesHtml += "<li><em>(Megjegyzés: A kukoricát, pelletet utánzó gumi/szilikon csalik békés halra engedélyezettek.)</em></li>";
+            } else {
+                generalRulesHtml += "<li>Ezen a napon nincs érvényben általános műcsali vagy csalihal tilalom. Részletes fajlagos tilalmak az alábbi táblázatban találhatók.</li>";
+            }
+            generalRulesHtml += "</ul>";
+            document.getElementById('general-rules').innerHTML = generalRulesHtml;
+
+            // 3. Táblázat generálása
+            let tbody = document.getElementById('fish-table-body');
+            tbody.innerHTML = "";
+            
+            fishData.forEach(fish => {
+                let isBanned = isInPeriod(selectedDate, fish.start, fish.end);
+                
+                if (fish.name === "Menyhal") isBanned = true;
+
+                if (isInPeriod(selectedDate, "02-15", "04-30")) {
+                    if (["Fogassüllő", "Balin", "Csuka", "Kősüllő", "Sügér"].includes(fish.name)) {
+                        isBanned = true;
+                    }
+                }
+
+                let statusBadge = isBanned 
+                    ? `<span class="badge banned">Tilalom alatt<span class="date-info">${fish.start.replace('-','.')}. - ${fish.end.replace('-','.')}.</span></span>` 
+                    : `<span class="badge allowed">Fogható</span>`;
+                
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${fish.name}</strong></td>
+                    <td>${statusBadge}</td>
+                    <td class="${isBanned ? 'muted-text' : ''}">${isBanned ? 'Tilalom miatt nem tartható meg' : fish.min}</td>
+                    <td class="${isBanned ? 'muted-text' : ''}">${isBanned ? '—' : fish.limit}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        const dateInput = document.getElementById('date-input');
+        dateInput.addEventListener('change', function(e) {
+            updateRulesForDate(new Date(e.target.value));
+        });
+
+        // ALAPBEÁLLÍTÁS: Oldalbetöltéskor a mai nap automatikus beállítása és kiszámítása
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            
+            const formattedToday = `${yyyy}-${mm}-${dd}`;
+            dateInput.value = formattedToday; // Értékadás az input mezőnek
+            
+            updateRulesForDate(today); // Azonnali futtatás a mai napra
+        });
+    </script>
+</body>
+</html>
